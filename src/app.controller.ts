@@ -1,18 +1,19 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
+import { AuthGuard } from './auth/auth.guard';
 
 @Controller()
 export class AppController {
   constructor(private readonly prismaService: PrismaService) {}
 
   @Get()
-  getHello() {
-    return this.prismaService.user.create({
-      data: {
-        email: 'test@mail.com',
-        name: 'Test User',
-        password: 'test',
-      },
-    });
+  public(): string {
+    return 'Hello World';
+  }
+
+  @Get('/private')
+  @UseGuards(AuthGuard)
+  private(): string {
+    return 'Hello Private World';
   }
 }
