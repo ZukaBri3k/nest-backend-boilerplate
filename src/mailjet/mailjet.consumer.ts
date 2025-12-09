@@ -25,8 +25,8 @@ export class MailjetConsumer extends WorkerHost {
 
   async sendResetPasswordEmail(email: string, tokenId: string) {
     const mailjet = new Mailjet({
-      apiKey: 'd128c6dea8e08957007e63c292a181e9',
-      apiSecret: '26135bdb87dbbfb429726ea3f4c8247d',
+      apiKey: process.env.MAILJET_API_KEY,
+      apiSecret: process.env.MAILJET_API_SECRET,
     });
 
     await mailjet.post('send', { version: 'v3.1' }).request({
@@ -53,8 +53,8 @@ export class MailjetConsumer extends WorkerHost {
 
   async sendVerificationEmail(email: string, tokenId: string) {
     const mailjet = new Mailjet({
-      apiKey: 'd128c6dea8e08957007e63c292a181e9',
-      apiSecret: '26135bdb87dbbfb429726ea3f4c8247d',
+      apiKey: process.env.MAILJET_API_KEY,
+      apiSecret: process.env.MAILJET_API_SECRET,
     });
 
     await mailjet.post('send', { version: 'v3.1' }).request({
