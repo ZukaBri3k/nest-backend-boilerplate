@@ -7,9 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { JwtModule } from './jwt/jwt.module';
 import { BcryptModule } from './bcrypt/bcrypt.module';
+import { MailjetModule } from './mailjet/mailjet.module';
 
 @Module({
-  imports: [PrismaModule, ConfigModule.forRoot(), AuthModule, UserModule, JwtModule, BcryptModule],
+  imports: [PrismaModule, ConfigModule.forRoot(), AuthModule, UserModule, JwtModule, BcryptModule, MailjetModule],
   controllers: [AppController],
   providers: [AppService],
 })

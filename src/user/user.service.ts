@@ -6,7 +6,6 @@ import {
 import { RegisterDto } from 'src/auth/dto/register.dto';
 import { BcryptService } from 'src/bcrypt/bcrypt.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
@@ -29,7 +28,7 @@ export class UserService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     try {
       return await this.prisma.user.findUniqueOrThrow({
         where: { id },
@@ -55,34 +54,7 @@ export class UserService {
     }
   }
 
-  async create(createUserDto: CreateUserDto) {
-    const existingUser = await this.prisma.user.findUnique({
-      where: { email: createUserDto.email },
-    });
-
-    if (existingUser) {
-      throw new ConflictException('Email already exists');
-    }
-
-    const hashedPassword = await this.bcrypt.hash(createUserDto.password);
-
-    return this.prisma.user.create({
-      data: {
-        ...createUserDto,
-        password: hashedPassword,
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-  }
-
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     await this.findOne(id);
 
     if (updateUserDto.email) {
@@ -95,7 +67,7 @@ export class UserService {
       }
     }
 
-    const data: any = { ...updateUserDto };
+    const data: UpdateUserDto = { ...updateUserDto };
 
     if (updateUserDto.password) {
       data.password = await this.bcrypt.hash(updateUserDto.password);
@@ -115,7 +87,7 @@ export class UserService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     await this.findOne(id);
 
     return this.prisma.user.delete({

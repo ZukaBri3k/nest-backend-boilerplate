@@ -15,16 +15,32 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   email     String   @unique
   name      String?
   password  String
   role      Role   @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  tokens    Token[]
 }
 
 enum Role {
   USER
   ADMIN
+}
+
+model Token {
+  id        String   @id @default(uuid())
+  type      TokenType
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+enum TokenType {
+  RESET_PASSWORD
+  EMAIL_VERIFICATION
 }
