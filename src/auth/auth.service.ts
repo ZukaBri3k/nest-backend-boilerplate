@@ -2,11 +2,11 @@ import { Body, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Token, User } from 'generated/prisma/client';
 import { omit } from 'lodash';
 import { BcryptService } from 'src/bcrypt/bcrypt.service';
-import { JwtService } from 'src/jwt/jwt.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import type { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -37,7 +37,7 @@ export class AuthService {
       throw new UnauthorizedException('Email not verified');
     }
 
-    const token = this.jwt.generateToken(user);
+    const token = this.jwt.sign(user);
 
     return { ...(omit(user, 'password') as Partial<User>), token };
   }
@@ -52,7 +52,7 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    const token = this.jwt.generateToken(user);
+    const token = this.jwt.sign(user);
 
     return { ...(omit(user, 'password') as Partial<User>), token };
   }

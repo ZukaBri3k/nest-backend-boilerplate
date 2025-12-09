@@ -6,10 +6,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BcryptModule } from './bcrypt/bcrypt.module';
-import { JwtModule } from './jwt/jwt.module';
 import { MailjetModule } from './mailjet/mailjet.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -17,7 +17,6 @@ import { UserModule } from './user/user.module';
     ConfigModule.forRoot(),
     AuthModule,
     UserModule,
-    JwtModule,
     BcryptModule,
     MailjetModule,
     BullModule.forRoot({
@@ -27,6 +26,11 @@ import { UserModule } from './user/user.module';
       },
     }),
     ScheduleModule.forRoot(),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '60s' },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

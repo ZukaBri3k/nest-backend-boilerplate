@@ -5,9 +5,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { User } from 'generated/prisma/client';
 import { Observable } from 'rxjs';
-import { JwtService } from 'src/jwt/jwt.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -27,7 +28,13 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('No authorization header provided');
     }
 
-    const payload = this.jwt.verifyToken(request.headers.authorization!);
+    let payload: User;
+    try {
+      payload = this.jwt.verify(request.headers.authorization!);
+    } catch {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
+
     if (payload) {
       request['user'] = payload;
 
@@ -37,7 +44,7 @@ export class AuthGuard implements CanActivate {
       // If roles are specified, check if user has required role or is ADMIN
       if (roles && roles.length > 0) {
         const allowedRoles = [...roles, 'ADMIN'];
-        if (!allowedRoles.includes(payload.role!)) {
+        if (!allowedRoles.includes(payload.role)) {
           return false;
         }
       }

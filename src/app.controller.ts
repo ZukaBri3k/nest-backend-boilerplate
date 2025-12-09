@@ -1,6 +1,8 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { PrismaService } from './prisma/prisma.service';
+import { CurrentUser } from './auth/decorators/authenticated_user.decorator';
+import type { User } from 'generated/prisma/client';
 
 @Controller()
 export class AppController {
@@ -19,7 +21,8 @@ export class AppController {
 
   @Get('/admin')
   @UseGuards(AuthGuard)
-  admin() {
+  admin(@CurrentUser() user: User): string {
+    console.log(user);
     return 'Hello Admin World';
   }
 }

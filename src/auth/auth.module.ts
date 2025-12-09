@@ -1,6 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { BcryptModule } from 'src/bcrypt/bcrypt.module';
-import { JwtModule } from 'src/jwt/jwt.module';
 import { MailjetModule } from 'src/mailjet/mailjet.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
@@ -13,7 +12,6 @@ import { ClearTokenCron } from './clear-token.cron';
   controllers: [AuthController],
   exports: [AuthService],
   imports: [
-    JwtModule,
     UserModule,
     BcryptModule,
     PrismaModule,
