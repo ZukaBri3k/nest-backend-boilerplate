@@ -1,15 +1,15 @@
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
-import { MailjetConsumer } from './mail.consumer';
-import { MailjetService } from './mail.service';
+import { MailConsumer } from './mail.consumer';
+import { MailService } from './mail.service';
 
 @Module({
-  providers: [MailjetService, MailjetConsumer],
+  providers: [MailService, MailConsumer],
   imports: [
     BullModule.registerQueue({
-      name: 'mailjetQueue',
+      name: 'mailQueue',
     }),
   ],
-  exports: [MailjetService],
+  exports: [MailService],
 })
-export class MailjetModule {}
+export class MailModule {}

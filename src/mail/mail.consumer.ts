@@ -2,10 +2,10 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import Mailjet from 'node-mailjet';
 
-@Processor('mailjetQueue', {
+@Processor('mailQueue', {
   concurrency: 10,
 })
-export class MailjetConsumer extends WorkerHost {
+export class MailConsumer extends WorkerHost {
   async process(
     job: Job<{ email: string; tokenId: string }, any, string>,
   ): Promise<any> {

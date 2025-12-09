@@ -4,11 +4,11 @@ import { Queue } from 'bullmq';
 import { Token } from 'generated/prisma/client';
 
 @Injectable()
-export class MailjetService {
-  constructor(@InjectQueue('mailjetQueue') private mailjetQueue: Queue) {}
+export class MailService {
+  constructor(@InjectQueue('mailQueue') private mailQueue: Queue) {}
 
   async sendResetPasswordEmail(email: string, token: Token) {
-    await this.mailjetQueue.add('send-reset-password', {
+    await this.mailQueue.add('send-reset-password', {
       email,
       tokenId: token.id,
     });
@@ -17,7 +17,7 @@ export class MailjetService {
   }
 
   async sendVerificationEmail(email: string, token: Token) {
-    await this.mailjetQueue.add('send-verification-email', {
+    await this.mailQueue.add('send-verification-email', {
       email,
       tokenId: token.id,
     });

@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { MailjetService } from 'src/mail/mail.service';
+import { MailService } from 'src/mail/mail.service';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -12,7 +12,7 @@ import { VerifyEmailDto } from './dto/verify-email.dto';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly mailjet: MailjetService,
+    private readonly mailService: MailService,
   ) {}
 
   @Post('login')
@@ -31,7 +31,7 @@ export class AuthController {
       payload.email,
     );
 
-    return await this.mailjet.sendResetPasswordEmail(payload.email, token);
+    return await this.mailService.sendResetPasswordEmail(payload.email, token);
   }
 
   @Post('reset-password')
@@ -45,7 +45,7 @@ export class AuthController {
       payload.email,
     );
 
-    return await this.mailjet.sendVerificationEmail(payload.email, token);
+    return await this.mailService.sendVerificationEmail(payload.email, token);
   }
 
   @Post('verify-email')

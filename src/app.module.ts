@@ -6,7 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BcryptModule } from './bcrypt/bcrypt.module';
-import { MailjetModule } from './mail/mail.module';
+import { MailModule } from './mail/mail.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
@@ -18,7 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     UserModule,
     BcryptModule,
-    MailjetModule,
+    MailModule,
     BullModule.forRoot({
       connection: {
         host: 'localhost',
