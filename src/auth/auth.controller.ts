@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { SendResetPasswordEmailDto } from './dto/send-reset-password-email.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -23,10 +24,12 @@ export class AuthController {
   }
 
   @Post('send-reset-password-email')
-  async sendResetPasswordEmail(@Body('email') email: string) {
-    const token = await this.authService.generateResetPasswordToken(email);
+  async sendResetPasswordEmail(@Body() payload: SendResetPasswordEmailDto) {
+    const token = await this.authService.generateResetPasswordToken(
+      payload.email,
+    );
 
-    return await this.mailjet.sendResetPasswordEmail(email, token);
+    return await this.mailjet.sendResetPasswordEmail(payload.email, token);
   }
 
   @Post('reset-password')
