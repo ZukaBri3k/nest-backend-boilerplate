@@ -8,8 +8,6 @@ export class ClearTokenCron {
 
   @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
-    console.log('token cleanup started');
-
     await this.prisma.token.deleteMany({
       where: {
         expiresAt: {
