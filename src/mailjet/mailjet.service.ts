@@ -15,4 +15,13 @@ export class MailjetService {
 
     return { message: 'Reset password email sent' };
   }
+
+  async sendVerificationEmail(email: string, token: Token) {
+    await this.mailjetQueue.add('send-verification-email', {
+      email,
+      tokenId: token.id,
+    });
+
+    return { message: 'Verification email sent' };
+  }
 }

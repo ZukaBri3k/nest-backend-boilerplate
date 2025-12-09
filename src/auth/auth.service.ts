@@ -33,6 +33,10 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
+    if (!user.isEmailVerified) {
+      throw new UnauthorizedException('Email not verified');
+    }
+
     const token = this.jwt.generateToken(user);
 
     return { ...(omit(user, 'password') as Partial<User>), token };
@@ -80,6 +84,33 @@ export class AuthService {
     return resetToken;
   }
 
+  async generateEmailVerificationToken(email: string): Promise<Token> {
+    const user = await this.usersService.findOneByEmail(email);
+
+    const existingToken = await this.prisma.token.findFirst({
+      where: {
+        userId: user.id,
+        type: 'EMAIL_VERIFICATION',
+      },
+    });
+
+    if (existingToken) {
+      await this.prisma.token.delete({
+        where: { id: existingToken.id },
+      });
+    }
+
+    const verificationToken = await this.prisma.token.create({
+      data: {
+        userId: user.id,
+        type: 'EMAIL_VERIFICATION',
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours
+      },
+    });
+
+    return verificationToken;
+  }
+
   async resetPassword(payload: ResetPasswordDto): Promise<{ message: string }> {
     const token = await this.prisma.token.findUnique({
       where: { id: payload.token },
@@ -105,5 +136,30 @@ export class AuthService {
     });
 
     return { message: 'Password has been reset successfully' };
+  }
+
+  async verifyEmail(tokenId: string): Promise<{ message: string }> {
+    const token = await this.prisma.token.findUnique({
+      where: { id: tokenId },
+    });
+
+    if (!token || token.type !== 'EMAIL_VERIFICATION') {
+      throw new UnauthorizedException('Invalid or expired verification token');
+    }
+
+    if (token.expiresAt < new Date()) {
+      throw new UnauthorizedException('Verification token has expired');
+    }
+
+    await this.prisma.user.update({
+      where: { id: token.userId },
+      data: { isEmailVerified: true },
+    });
+
+    await this.prisma.token.delete({
+      where: { id: token.id },
+    });
+
+    return { message: 'Email has been verified successfully' };
   }
 }

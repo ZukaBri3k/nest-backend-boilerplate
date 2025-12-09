@@ -5,6 +5,8 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { SendResetPasswordEmailDto } from './dto/send-reset-password-email.dto';
+import { sendVerificationEmailDto } from './dto/send-verification-email.dto';
+import { VerifyEmailDto } from './dto/verify-email.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -35,5 +37,19 @@ export class AuthController {
   @Post('reset-password')
   async resetPassword(@Body() payload: ResetPasswordDto) {
     return await this.authService.resetPassword(payload);
+  }
+
+  @Post('send-verification-email')
+  async sendVerificationEmail(@Body() payload: sendVerificationEmailDto) {
+    const token = await this.authService.generateEmailVerificationToken(
+      payload.email,
+    );
+
+    return await this.mailjet.sendVerificationEmail(payload.email, token);
+  }
+
+  @Post('verify-email')
+  async verifyEmail(@Body() payload: VerifyEmailDto) {
+    return await this.authService.verifyEmail(payload.token);
   }
 }
