@@ -53,10 +53,25 @@ export class AuthService {
     return { ...(omit(user, 'password') as Partial<User>), token };
   }
 
-  async generateResetPasswordToken(userId: string): Promise<Token> {
+  async generateResetPasswordToken(email: string): Promise<Token> {
+    const user = await this.usersService.findOneByEmail(email);
+
+    const existingToken = await this.prisma.token.findFirst({
+      where: {
+        userId: user.id,
+        type: 'RESET_PASSWORD',
+      },
+    });
+
+    if (existingToken) {
+      await this.prisma.token.delete({
+        where: { id: existingToken.id },
+      });
+    }
+
     const resetToken = await this.prisma.token.create({
       data: {
-        userId,
+        userId: user.id,
         type: 'RESET_PASSWORD',
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours
       },

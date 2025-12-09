@@ -24,7 +24,9 @@ export class AuthController {
 
   @Post('send-reset-password-email')
   async sendResetPasswordEmail(@Body('email') email: string) {
-    return await this.mailjet.sendResetPasswordEmail(email);
+    const token = await this.authService.generateResetPasswordToken(email);
+
+    return await this.mailjet.sendResetPasswordEmail(email, token);
   }
 
   @Post('reset-password')
