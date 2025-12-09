@@ -6,9 +6,10 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { ClearTokenCron } from './clear-token.cron';
 
 @Module({
-  providers: [AuthService],
+  providers: [AuthService, ClearTokenCron],
   controllers: [AuthController],
   exports: [AuthService],
   imports: [
