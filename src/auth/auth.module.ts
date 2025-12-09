@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { BcryptModule } from 'src/bcrypt/bcrypt.module';
-import { MailjetModule } from 'src/mailjet/mailjet.module';
+import { MailjetModule } from 'src/mail/mail.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';

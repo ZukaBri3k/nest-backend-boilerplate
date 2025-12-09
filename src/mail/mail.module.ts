@@ -1,7 +1,7 @@
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
-import { MailjetConsumer } from './mailjet.consumer';
-import { MailjetService } from './mailjet.service';
+import { MailjetConsumer } from './mail.consumer';
+import { MailjetService } from './mail.service';
 
 @Module({
   providers: [MailjetService, MailjetConsumer],

@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { MailjetService } from 'src/mailjet/mailjet.service';
+import { MailjetService } from 'src/mail/mail.service';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
